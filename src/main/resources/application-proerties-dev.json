@@ -1,0 +1,11 @@
+[
+  {
+    "PropertyGroupId": "KinesisSourceProperties",
+    "PropertyMap": {
+      "flink.stream.initpos": "LATEST",
+      "aws.region": "us-east-1",
+      "AggregationEnabled": "false",
+      "aws.kinesis.stream.name": "kinesis-dat-reader-stream"
+    }
+  }
+]
