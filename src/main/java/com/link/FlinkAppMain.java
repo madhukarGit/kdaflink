@@ -3,13 +3,14 @@ package com.link;
 import com.amazonaws.services.kinesisanalytics.runtime.KinesisAnalyticsRuntime;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.java.DataSet;
+import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.LocalStreamEnvironment;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.connectors.kinesis.FlinkKinesisConsumer;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import software.amazon.kinesis.connectors.flink.FlinkKinesisConsumer;
 
 import java.io.IOException;
 import java.util.*;
@@ -69,8 +70,7 @@ public class FlinkAppMain
         return properties;
     }
 
-    private static DataStream<String> createSource(StreamExecutionEnvironment env, Properties properties){
-        System.out.println("properties "+properties);
+    public static DataStream<String> createSource(StreamExecutionEnvironment env, Properties properties){
         return env.addSource(new FlinkKinesisConsumer<>(properties.get("aws.kinesis.stream.name").toString(),
                 new SimpleStringSchema(), properties))
                 .name("Kinesis Source")
