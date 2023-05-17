@@ -1,6 +1,8 @@
 package com.link;
 
 import com.amazonaws.services.kinesisanalytics.runtime.KinesisAnalyticsRuntime;
+import com.link.model.RecordStream;
+import com.link.schema.RecordSchema;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
@@ -25,7 +27,7 @@ public class FlinkAppMain
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         Map<String, Properties> applicationPropertiesMap = initPropertiesMap(env);
         Properties sourceKinesisProperties = getProperties(applicationPropertiesMap,"KinesisSourceProperties");
-        DataStream<String> inputStream = createSource(env, sourceKinesisProperties);
+        DataStream<RecordStream> inputStream = createSource(env, sourceKinesisProperties);
         inputStream.print();
         env.execute();
     }
@@ -70,9 +72,9 @@ public class FlinkAppMain
         return properties;
     }
 
-    public static DataStream<String> createSource(StreamExecutionEnvironment env, Properties properties){
+    public static DataStream<RecordStream> createSource(StreamExecutionEnvironment env, Properties properties){
         return env.addSource(new FlinkKinesisConsumer<>(properties.get("aws.kinesis.stream.name").toString(),
-                new SimpleStringSchema(), properties))
+                new RecordSchema(), properties))
                 .name("Kinesis Source")
                 .uid("kinesis_source");
     }
